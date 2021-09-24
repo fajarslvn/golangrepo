@@ -10,5 +10,5 @@ type Rectangle struct {
 
 type Shape interface {
 	Area() float64
-	IsSquare() bool
+	// IsSquare() bool
 }
