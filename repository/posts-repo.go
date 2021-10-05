@@ -50,7 +50,7 @@ func (*repo) Save(post *entity.Post) (*entity.Post, error) {
 	return post, nil
 }
 
-func (*repo) FindAll() ([]entity.Post, error) {
+func (*repo) FindAll() ([]entity.Post, error ) {
 
 	ctx := context.Background()
 	client, err := firestore.NewClient(ctx, projectId)
@@ -73,7 +73,7 @@ func (*repo) FindAll() ([]entity.Post, error) {
 		}
 		
 		post := entity.Post{
-			ID: 	doc.Data()["ID"].(int),
+			ID: 	doc.Data()["ID"].(int64),
 			Title: 	doc.Data()["Title"].(string),
 			Text: 	doc.Data()["Text"].(string),
 		}

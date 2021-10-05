@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"math/rand"
 	"net/http"
 
 	"github.com/fajarslvn/go_rest_api/entity"
@@ -35,10 +36,8 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	
-	post.ID = len(posts) + 1
-	posts = append(posts, post)
+	post.ID = rand.Int63()
+	repo.Save(&post)
 	res.WriteHeader(http.StatusOK)
-
-	result, _ := json.Marshal(posts)
-	res.Write(result)
+	json.NewEncoder(res).Encode(post )
 }
