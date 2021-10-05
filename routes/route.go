@@ -3,44 +3,31 @@ package routes
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/fajarslvn/go_rest_api/entity"
+	"github.com/fajarslvn/go_rest_api/repository"
 )
 
-type Post struct {
-	Id 		int		`json:"id"`
-	Title 	string	`json:"title"`
-	Text 	string	`json:"text"`
-} 
-
-var (posts []Post)
-
-func init() {
-	posts = []Post{
-		{
-			Id: 1, 
-			Title: "Title 1", 
-			Text: "Text 1",
-		},
-	}
-}
+var (
+	repo repository.PostRepository = repository.NewPostRepository()
+)
 
 func GetPosts(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-type", "application/json")
-	
-	result, err := json.Marshal(posts)
+	posts, err := repo.FindAll()
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError )
-		res.Write([]byte(`{"error": "Error marshaling the posts array"}`))
+		res.Write([]byte(`{"error": "Error getting the posts"}`))
 		return
 	}
-
 	res.WriteHeader(http.StatusOK)
-	res.Write(result)
+	json.NewEncoder(res).Encode(posts)
 }
 
 func AddPost(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-type", "application/json")
-	
-	var post Post
+
+	var post entity.Post
 	err := json.NewDecoder(req.Body).Decode(&post)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError )
@@ -48,7 +35,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	
-	post.Id = len(posts) + 1
+	post.ID = len(posts) + 1
 	posts = append(posts, post)
 	res.WriteHeader(http.StatusOK)
 

@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	route "github.com/fajarslvn/go_rest_api/routes"
+	"github.com/fajarslvn/go_rest_api/routes"
 	"github.com/gorilla/mux"
 )
 
@@ -17,8 +17,8 @@ func main() {
 		fmt.Fprintln(res, "up and running...")
 	})
 
-	router.HandleFunc("/posts", route.GetPosts).Methods("GET")
-	router.HandleFunc("/posts", route.AddPost).Methods("POST")
+	router.HandleFunc("/posts", routes.GetPosts).Methods("GET")
+	router.HandleFunc("/posts", routes.AddPost).Methods("POST")
 	log.Println("listening on port", port)
 	log.Fatalln(http.ListenAndServe(port, router))
 } 
