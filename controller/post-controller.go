@@ -2,43 +2,64 @@ package controller
 
 import (
 	"encoding/json"
-	"math/rand"
 	"net/http"
 
 	"github.com/fajarslvn/go_rest_api/entity"
-	"github.com/fajarslvn/go_rest_api/repository"
+	"github.com/fajarslvn/go_rest_api/errorz"
 	"github.com/fajarslvn/go_rest_api/service"
 )
 
+type controller struct {}
+
 var (
-	repo service.PostRepository = repository.NewFirestoreRepository()
+	postService service.PostService = service.NewPostService()
 )
 
-func GetPosts(res http.ResponseWriter, req *http.Request) {
+type PostController interface {
+	GetPosts(res http.ResponseWriter, req *http.Request)
+	AddPost(res http.ResponseWriter, req *http.Request)
+}
+
+func NewPostController() PostController {
+	return &controller{}
+}
+
+func (*controller) GetPosts(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-type", "application/json")
-	posts, err := repo.FindAll()
+	posts, err := postService.FindAll()
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError )
-		res.Write([]byte(`{"error": "Error getting the posts"}`))
+		json.NewEncoder(res).Encode(errorz.ServiceError{Message: "Error getting the posts"})
 		return
 	}
 	res.WriteHeader(http.StatusOK)
 	json.NewEncoder(res).Encode(posts)
 }
 
-func AddPost(res http.ResponseWriter, req *http.Request) {
+func (*controller) AddPost(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-type", "application/json")
 
 	var post entity.Post
 	err := json.NewDecoder(req.Body).Decode(&post)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError )
-		res.Write([]byte(`{"error": "Error unmarshaling the request"}`))
+		json.NewEncoder(res).Encode(errorz.ServiceError{Message: "Error unmarshaling the request"})
 		return
 	}
-	
-	post.ID = rand.Int63()
-	repo.Save(&post)
+ 
+	err1 := postService.Validate(&post)
+	if err1 != nil {
+		res.WriteHeader(http.StatusInternalServerError )
+		json.NewEncoder(res).Encode(errorz.ServiceError{Message: err1.Error()})
+		return
+	}
+	result, err2 := postService.Create(&post)
+	if err2 != nil {
+		res.WriteHeader(http.StatusInternalServerError )
+		json.NewEncoder(res).Encode(errorz.ServiceError{Message: "error saving post "})
+		return
+	}
+
 	res.WriteHeader(http.StatusOK)
-	json.NewEncoder(res).Encode(post )
+	json.NewEncoder(res).Encode(result)
 }
