@@ -6,10 +6,14 @@ import (
 
 	"github.com/fajarslvn/go_rest_api/controller"
 	router "github.com/fajarslvn/go_rest_api/http"
+	"github.com/fajarslvn/go_rest_api/repository"
+	"github.com/fajarslvn/go_rest_api/service"
 )
 
 var (
-	postController controller.PostController = controller.NewPostController()
+	postRepository repository.PostRepository = repository.NewFirestoreRepository()
+	postService service.PostService = service.NewPostService(postRepository)
+	postController controller.PostController = controller.NewPostController(postService)
 	httpRouter router.Router = router.NewMuxRouter() 
 )
 
