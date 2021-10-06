@@ -1,4 +1,4 @@
-package routes
+package controller
 
 import (
 	"encoding/json"
@@ -7,10 +7,11 @@ import (
 
 	"github.com/fajarslvn/go_rest_api/entity"
 	"github.com/fajarslvn/go_rest_api/repository"
+	"github.com/fajarslvn/go_rest_api/service"
 )
 
 var (
-	repo repository.PostRepository = repository.NewFirestoreRepository()
+	repo service.PostRepository = repository.NewFirestoreRepository()
 )
 
 func GetPosts(res http.ResponseWriter, req *http.Request) {
