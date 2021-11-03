@@ -1,7 +1,7 @@
 package module02
 
 import (
-	"algo/module02/sorttest"
+	"go_algo_ds/module02/sorttest"
 	"testing"
 )
 

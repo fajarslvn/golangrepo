@@ -1,8 +1,8 @@
 package main
 
 import (
-	"algo/module01"
 	"fmt"
+	"go_algo_ds/module01"
 )
 
 func main() {
