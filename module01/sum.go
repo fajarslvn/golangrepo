@@ -10,7 +10,7 @@ func Sum(numbers []int) int {
 	// }
 	return result */
 
-	// Solution 2
+	// Solution 2: recursion
 	if len(numbers) == 0 {
 		return 0
 	}
