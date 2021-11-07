@@ -4,8 +4,8 @@ package module01
 // list slice, and false otherwise.
 func NumInList(list []int, num int) bool {
 	// Solution 1
-	for _, i := range list {
-		if i == num {
+	for _, v := range list {
+		if v == num {
 			return true
 		}
 	}

@@ -5,6 +5,7 @@ func Reverse(word string) string {
 	var result string
 	for _, i := range word {
 		result = string(i) + result
+		// result = iterate: word + d(3), r(2), o(1), w(0) ->
 	}
 	return result
 }
