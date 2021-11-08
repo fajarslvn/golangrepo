@@ -18,16 +18,16 @@ func TestFindTwoThatSum(t *testing.T) {
 	}
 	for _, tc := range tests {
 		t.Run(fmt.Sprintf("%v with sum %v", tc.numbers, tc.sum), func(t *testing.T) {
-			// append is used to copy the numbers so that even if the
-			// FindTwoThatSum code alters the slice (which it shouldn't!)
-			// a solution like the following isn't accepted:
-			//
-			//   numbers[0] = 0
-			//   numbers[1] = sum
-			//   return 0, 1
-			//
-			// If this doesn't make sense to you, don't worry about it
-			// for now :)
+			/* append is used to copy the numbers so that even if the
+			FindTwoThatSum code alters the slice (which it shouldn't!)
+			a solution like the following isn't accepted:
+
+			  numbers[0] = 0
+			  numbers[1] = sum
+			  return 0, 1
+
+			If this doesn't make sense to you, don't worry about it
+			for now :)*/
 			numbersCopy := append([]int{}, tc.numbers...)
 			i, j := FindTwoThatSum(numbersCopy, tc.sum)
 			if err := intSlicesEqual(numbersCopy, tc.numbers); err != nil {
