@@ -173,11 +173,52 @@ func TestPrepareStatement(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		email := "jay" + strconv.Itoa(i) + "@gmail.com"
 		comment := "This is comment number " + strconv.Itoa(i)
+
 		result, err := statement.ExecContext(ctx, email, comment)
 		if err != nil {
 			panic(err)
 		}
-		lastInsertId, _ := result.LastInsertId()
-		fmt.Println("Comment Id", lastInsertId)
+
+		id, err := result.LastInsertId()
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Comment Id", id)
+	}
+}
+
+func TestTransaction(t *testing.T) {
+	db := GetConnection()
+	defer db.Close()
+
+	ctx := context.Background()
+	tx, err := db.Begin()
+	if err != nil {
+		panic(err)
+	}
+
+	sqlQuery := "INSERT INTO comments(email, comment) VALUES(?, ?)"
+
+	for i := 0; i < 10; i++ {
+		email := "jay" + strconv.Itoa(i) + "@gmail.com"
+		comment := "This is comment number " + strconv.Itoa(i)
+
+		result, err := tx.ExecContext(ctx, sqlQuery, email, comment)
+		if err != nil {
+			panic(err)
+		}
+
+		id, err := result.LastInsertId()
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Comment Id", id)
+	}
+	// err = tx.Rollback()
+	err = tx.Commit()
+	if err != nil {
+		panic(err)
 	}
 }
