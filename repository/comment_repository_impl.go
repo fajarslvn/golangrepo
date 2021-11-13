@@ -8,10 +8,11 @@ import (
 	"strconv"
 )
 
-type commentRepositoryImpl struct {
+type commentRepositoryImpl struct { //
 	DB *sql.DB
 }
 
+// Koneksi ke database, menggunakan func GetConnect() dari database.go
 func NewCommentRepository(db *sql.DB) CommentRepository {
 	return &commentRepositoryImpl{DB: db}
 }
