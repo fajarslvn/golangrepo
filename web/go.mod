@@ -1,3 +1,3 @@
-module go_web
+module web
 
 go 1.17
