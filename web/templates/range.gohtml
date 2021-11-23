@@ -1,0 +1,14 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Range</title>
+</head>
+<body>
+  <h1>Hobi Anda Adalah:</h1>
+  {{range $index, $element := .Hobbies}}
+  <p>{{$element}}</p>
+  {{else}}
+  <p>Anda tidak punya hobi</p>
+  {{end}}
+</body>
+</html>

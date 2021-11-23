@@ -1,10 +1,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{{.Title}}</title>
+  <title>if else</title>
 </head>
 <body>
+  {{if .Name}}
   <h1>Hello {{.Name}}</h1>
-  <h2>Alamat: {{.Address.Street}}</h2>
+  {{else}}
+  <h1>Hello</h1>
+  {{end}}
 </body>
 </html>
