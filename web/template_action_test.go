@@ -77,3 +77,29 @@ func TestTemplateActionRange(t *testing.T) {
 	}
 	fmt.Println(string(body))
 }
+
+func TemplateActionWith(w http.ResponseWriter, r *http.Request) {
+	t := template.Must(template.ParseFiles("./templates/address.gohtml"))
+	t.ExecuteTemplate(w, "address.gohtml", map[string]interface{}{
+		"Title": "Template action with",
+		"Name":  "Fsec",
+		"Address": map[string]interface{}{
+			"Street": "Street 1337",
+			"City":   "Depok",
+		},
+	})
+}
+
+func TestTemplateActionWith(t *testing.T) {
+	req := httptest.NewRequest("GET", "http://localhost:8181", nil)
+	rec := httptest.NewRecorder()
+
+	TemplateActionWith(rec, req)
+
+	res := rec.Result()
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(body))
+}
