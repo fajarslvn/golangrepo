@@ -13,10 +13,9 @@ import (
 // NOTES: cara ini yg di rekomendasikan dlm menggunakan template.
 
 //go:embed templates/*.gohtml
-var (
-	temps       embed.FS
-	myTemplates = template.Must(template.ParseFS(temps, "templates/*.gohtml"))
-)
+var temps embed.FS
+
+var myTemplates = template.Must(template.ParseFS(temps, "templates/*.gohtml"))
 
 func TemplateCache(w http.ResponseWriter, r *http.Request) {
 	myTemplates.ExecuteTemplate(w, "simple.gohtml", "Hello HTML Template")
