@@ -3,11 +3,11 @@ package go_web
 import (
 	"embed"
 	"fmt"
+	"html/template"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"text/template"
 )
 
 // NOTES: cara ini yg di rekomendasikan dlm menggunakan template.
