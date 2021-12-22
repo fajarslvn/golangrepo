@@ -15,7 +15,7 @@ func RedirectFrom(w http.ResponseWriter, r *http.Request) {
 }
 
 func RedirectOut(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "https://google.com", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "https://bing.com", http.StatusTemporaryRedirect)
 }
 
 func TestRedirect(t *testing.T) {
