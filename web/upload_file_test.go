@@ -1,8 +1,13 @@
 package go_web
 
 import (
+	"bytes"
+	_ "embed"
+	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 )
@@ -57,4 +62,29 @@ func TestUploadForm(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+//go:embed resources/small.jpg
+var uploadFileTest []byte
+
+func TestUploadFile(t *testing.T) {
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	writer.WriteField("name", "Test Picture")
+	file, _ := writer.CreateFormFile("file", "ExUploadFile.jpg")
+	file.Write(uploadFileTest)
+	writer.Close()
+
+	req := httptest.NewRequest("POST", "http://localhost:8181", body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	rec := httptest.NewRecorder()
+
+	Upload(rec, req)
+
+	res := rec.Result()
+	bodyRes, err := io.ReadAll(res.Body)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(bodyRes))
 }
