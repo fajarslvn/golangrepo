@@ -14,7 +14,7 @@ func DownloadFile(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Bad Request")
 		return
 	}
-
+	// Add this line for forcing download
 	w.Header().Add("Content-Disposition", "attachment; filename=\""+file+"\"")
 	http.ServeFile(w, r, "./resources/"+file)
 }
