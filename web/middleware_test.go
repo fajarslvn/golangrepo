@@ -10,6 +10,22 @@ type LogMiddleware struct {
 	Handler http.Handler
 }
 
+type ErrorHandler struct {
+	Handler http.Handler
+}
+
+func (errorHandler *ErrorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		err := recover()
+		if err != nil {
+			fmt.Println("There's an Error")
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "Error: %s", err)
+		}
+	}()
+	errorHandler.Handler.ServeHTTP(w, r)
+}
+
 func (middleware *LogMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Before execute Handler")
 	middleware.Handler.ServeHTTP(w, r)
