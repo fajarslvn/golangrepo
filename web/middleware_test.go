@@ -6,10 +6,6 @@ import (
 	"testing"
 )
 
-type LogMiddleware struct {
-	Handler http.Handler
-}
-
 type ErrorHandler struct {
 	Handler http.Handler
 }
@@ -24,6 +20,10 @@ func (errorHandler *ErrorHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 		}
 	}()
 	errorHandler.Handler.ServeHTTP(w, r)
+}
+
+type LogMiddleware struct {
+	Handler http.Handler
 }
 
 func (middleware *LogMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -45,13 +45,22 @@ func TestMiddleware(t *testing.T) {
 		fmt.Fprint(w, "Hello Foo")
 	})
 
-	LogMiddleware := &LogMiddleware{
+	mux.HandleFunc("/panic", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Panic executed")
+		panic("Ups")
+	})
+
+	logMiddleware := &LogMiddleware{
 		Handler: mux,
+	}
+
+	errorHandler := &ErrorHandler{
+		Handler: logMiddleware,
 	}
 
 	server := http.Server{
 		Addr:    "localhost:8181",
-		Handler: LogMiddleware,
+		Handler: errorHandler,
 	}
 
 	err := server.ListenAndServe()
