@@ -11,14 +11,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNotFound(t *testing.T) {
+func TestRouter(t *testing.T) {
 	router := httprouter.New()
-
-	router.NotFound = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Not Found")
+	router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		fmt.Fprint(w, "Hello World")
 	})
 
-	req := httptest.NewRequest("GET", "http://localhost:3000/404", nil)
+	req := httptest.NewRequest("GET", "http://localhost:3000/", nil)
 	rec := httptest.NewRecorder()
 
 	router.ServeHTTP(rec, req)
@@ -28,5 +27,5 @@ func TestNotFound(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(t, "Not Found", string(body))
+	assert.Equal(t, "Hello World", string(body))
 }
