@@ -35,5 +35,5 @@ func TestServeFile(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(t, "Goodbye Router", string(body))
+	assert.Equal(t, "Goodbye Router\n", string(body))
 }
