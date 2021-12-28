@@ -11,22 +11,32 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNotFound(t *testing.T) {
-	router := httprouter.New()
+type LogMiddleware struct {
+	http.Handler
+}
 
-	router.NotFound = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Not Found")
+func (l *LogMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Receive request")
+	l.Handler.ServeHTTP(w, r)
+}
+
+func TestMidlleware(t *testing.T) {
+	router := httprouter.New()
+	router.GET("/", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		fmt.Fprint(w, "Middleware")
 	})
 
-	req := httptest.NewRequest("GET", "http://localhost:3000/404", nil)
+	middleware := LogMiddleware{router}
+
+	req := httptest.NewRequest("GET", "http://localhost:3000/", nil)
 	rec := httptest.NewRecorder()
 
-	router.ServeHTTP(rec, req)
+	middleware.ServeHTTP(rec, req)
 	res := rec.Result()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(t, "Not Found", string(body))
+	assert.Equal(t, "Middleware", string(body))
 }
