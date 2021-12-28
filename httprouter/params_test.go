@@ -11,15 +11,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParams(t *testing.T) {
+func TestNotAllowed(t *testing.T) {
 	router := httprouter.New()
-	router.GET("/products/:id", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		id := p.ByName("id")
-		text := "Product " + id
-		fmt.Fprint(w, text)
+	router.MethodNotAllowed = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "Not Allowed")
 	})
 
-	req := httptest.NewRequest("GET", "http://localhost:3000/products/1", nil)
+	router.POST("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		fmt.Fprint(w, "Only POST Method Allowed")
+	})
+
+	req := httptest.NewRequest("GET", "http://localhost:3000/", nil)
 	rec := httptest.NewRecorder()
 
 	router.ServeHTTP(rec, req)
@@ -29,5 +31,5 @@ func TestParams(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(t, "Product 1", string(body))
+	assert.Equal(t, "Not Allowed", string(body))
 }
