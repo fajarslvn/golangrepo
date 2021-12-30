@@ -82,3 +82,41 @@ func TestJSONArrayComplexDecode(t *testing.T) {
 	fmt.Println(customer.FirstName)
 	fmt.Println(customer.Addresses)
 }
+
+func TestOnlyJSONArrayComplexDecode(t *testing.T) {
+	jsonString := `[
+				{"Street":"Wismamas","Country":"Indonesia","PostalCode":"16516"},
+				{"Street":"Elm Street","Country":"Singapore","PostalCode":"17717"}
+			]`
+
+	jsonBytes := []byte(jsonString)
+
+	addresses := &[]Address{}
+	err := json.Unmarshal(jsonBytes, addresses)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(addresses)
+}
+
+func TestOnlyJSONArrayComplex(t *testing.T) {
+	addresses := []Address{
+		{
+			Street:     "Wismamas",
+			Country:    "Indonesia",
+			PostalCode: "16516",
+		},
+		{
+			Street:     "Elm Street",
+			Country:    "Singapore",
+			PostalCode: "17717",
+		},
+	}
+
+	bytes, err := json.Marshal(addresses)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(bytes))
+}
