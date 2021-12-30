@@ -6,6 +6,12 @@ import (
 	"testing"
 )
 
+type Address struct {
+	Street     string
+	Country    string
+	PostalCode string
+}
+
 type Customer struct {
 	FirstName  string
 	MiddleName string
@@ -13,6 +19,7 @@ type Customer struct {
 	Age        int
 	Married    bool
 	Hobbies    []string
+	Addresses  []Address
 }
 
 func TestJSONObject(t *testing.T) {
@@ -29,4 +36,49 @@ func TestJSONObject(t *testing.T) {
 	}
 
 	fmt.Println(string(bytes))
+}
+
+func TestJSONArrayComplex(t *testing.T) {
+	customer := Customer{
+		FirstName: "Fajar",
+		Addresses: []Address{
+			{
+				Street:     "Wismamas",
+				Country:    "Indonesia",
+				PostalCode: "16516",
+			},
+			{
+				Street:     "Elm Street",
+				Country:    "Singapore",
+				PostalCode: "17717",
+			},
+		},
+	}
+
+	bytes, err := json.Marshal(customer)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(bytes))
+}
+
+func TestJSONArrayComplexDecode(t *testing.T) {
+	jsonString := `{
+		"FirstName":"Fajar", 
+		"Addresses":[
+				{"Street":"Wismamas","Country":"Indonesia","PostalCode":"16516"},
+				{"Street":"Elm Street","Country":"Singapore","PostalCode":"17717"}
+			]
+		}`
+
+	jsonBytes := []byte(jsonString)
+	customer := &Customer{}
+	err := json.Unmarshal(jsonBytes, customer)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customer)
+	fmt.Println(customer.FirstName)
+	fmt.Println(customer.Addresses)
 }
