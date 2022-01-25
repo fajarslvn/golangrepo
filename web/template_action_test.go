@@ -10,8 +10,8 @@ import (
 )
 
 func TemplateActionIf(w http.ResponseWriter, r *http.Request) {
-	t := template.Must(template.ParseFiles("./templates/if.gohtml"))
-	t.ExecuteTemplate(w, "if.gohtml", Page{
+	t := template.Must(template.ParseFiles("./templates/if.html"))
+	t.ExecuteTemplate(w, "if.html", Page{
 		Title: "Template data if",
 		Name:  "Fsec",
 	})

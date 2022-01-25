@@ -10,7 +10,7 @@ import (
 )
 
 func TemplateAutoEscape(w http.ResponseWriter, r *http.Request) {
-	myTemplates.ExecuteTemplate(w, "post.gohtml", map[string]interface{}{
+	myHtml.ExecuteTemplate(w, "post.html", map[string]interface{}{
 		"Title": "Go-Lang Auto Escape",
 		"Body":  "<p>Selamat belajar golang web<script>alert(9)</script></p>",
 	})
@@ -43,7 +43,7 @@ func TestTemplateAutoEscapeServer(t *testing.T) {
 }
 
 func TemplateAutoEscapeDisabled(w http.ResponseWriter, r *http.Request) {
-	myTemplates.ExecuteTemplate(w, "post.gohtml", map[string]interface{}{
+	myHtml.ExecuteTemplate(w, "post.html", map[string]interface{}{
 		"Title": "Go-Lang Auto Escape",
 		"Body":  template.HTML("<p>Selamat belajar golang web</p><script>alert(9)</script>"),
 	})
@@ -76,7 +76,7 @@ func TestTemplateAutoEscapeDisabledServer(t *testing.T) {
 }
 
 func TemplateXSS(w http.ResponseWriter, r *http.Request) {
-	myTemplates.ExecuteTemplate(w, "post.gohtml", map[string]interface{}{
+	myHtml.ExecuteTemplate(w, "post.html", map[string]interface{}{
 		"Title": "Go-Lang Auto Escape",
 		"Body":  template.HTML(r.URL.Query().Get("body")),
 	})
